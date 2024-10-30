@@ -33,74 +33,46 @@ public class Header {
         System.out.print("\t│  ");
 
         // main content
-        if (text.length() > TOTAL_WIDTH - PADDING) {
+        int num_of_chars_written_in_this_line = 0;
 
-            int index = 0;
-            int text_len_left = text.length();
-            int num_of_chars_written_in_this_line = 0;
-            int count;
-            while (text_len_left > 0) {
-                count = index + 1;
-                if (text.charAt(index) == '\n') {
-                    for (int i = 0; i < TOTAL_WIDTH - PADDING - num_of_chars_written_in_this_line; i++) {
-                        System.out.print(" ");
-                    }
-                    System.out.print("  │");
-                    System.out.println();
-                    System.out.print("\t│  ");
-                    num_of_chars_written_in_this_line = 0;
-                    count = 0;
+        for (int i = 0; i < text.length(); i++) {
+            char currentChar = text.charAt(i);
 
-                } else {
-                    System.out.print(text.charAt(index));
+            if (currentChar == '\n') {
+                for (int j = 0; j < TOTAL_WIDTH - 4 - num_of_chars_written_in_this_line; j++) {
+                    System.out.print(" ");
                 }
+                System.out.print("  │");
+                System.out.println();
+                System.out.print("\t│  ");
+                num_of_chars_written_in_this_line = 0;
+            } 
+            else if (currentChar == '\t') {
+                System.out.print("    ");
+                num_of_chars_written_in_this_line += 4;
+            }
+            else {
+                System.out.print(currentChar);
                 num_of_chars_written_in_this_line++;
-                if (count % 36 == 0 && index != 0) {
-                    System.out.print("  │");
-                    System.out.println();
-                    System.out.print("\t│  ");
-                    num_of_chars_written_in_this_line = 0;
-                }
-                text_len_left--;
-                index++;
-
-                if (text_len_left == 0) {
-                    for (int i = 0; i < TOTAL_WIDTH - PADDING - num_of_chars_written_in_this_line; i++) {
-                        System.out.print(" ");
-                    }
-                }
             }
 
-        } else {
-
-            int num_of_chars_written = 0;
-            int total_num_of_chars_written = 0;
-
-            for (int i = 0; i < text.length(); i++) {
-                if (text.charAt(i) == '\n') {
-                    for (int j = 0; j < TOTAL_WIDTH - PADDING - num_of_chars_written; j++) {
-                        System.out.print(" ");
-                    }
-                    System.out.print("  │");
-                    System.out.println();
-                    System.out.print("\t│  ");
-                    num_of_chars_written = 0;
-                } else {
-                    System.out.print(text.charAt(i));
-                    num_of_chars_written++;
-                    total_num_of_chars_written++;
-                }
-                // System.out.printf(":%d ", num_of_chars_written);
+            if (num_of_chars_written_in_this_line >= TOTAL_WIDTH - 4) {
+                System.out.print("  │");
+                System.out.println();
+                System.out.print("\t│  ");
+                num_of_chars_written_in_this_line = 0;
             }
-            for (int j = 0; j < TOTAL_WIDTH - PADDING - num_of_chars_written; j++) {
-                System.out.print(" ");
-            }
+        }
+
+        for (int j = 0; j < TOTAL_WIDTH - 4 - num_of_chars_written_in_this_line; j++) {
+            System.out.print(" ");
         }
 
         // right border
         System.out.print("  │");
         System.out.println();
     }
+
 
     public static void bottom() {
 
