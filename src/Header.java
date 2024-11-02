@@ -64,9 +64,11 @@ public class Header {
                 for (int j = 0; j < TOTAL_WIDTH - 4 - num_of_chars_written_in_this_line; j++) {
                     System.out.print(" ");
                 }
+                System.out.print("\033[36m");
                 System.out.print("  │");
                 System.out.println();
                 System.out.print("\t│  ");
+                System.out.print("\033[0m");
                 num_of_chars_written_in_this_line = 0;
             } 
             else if (currentChar == '\t') {
@@ -79,9 +81,11 @@ public class Header {
             }
 
             if (num_of_chars_written_in_this_line >= TOTAL_WIDTH - 4) {
+                System.out.print("\033[36m");
                 System.out.print("  │");
                 System.out.println();
                 System.out.print("\t│  ");
+                System.out.print("\033[0m");
                 num_of_chars_written_in_this_line = 0;
             }
         }
@@ -91,6 +95,20 @@ public class Header {
         }
 
         // right border
+        System.out.print("\033[36m");
+        System.out.print("  │");
+        System.out.print("\033[0m");
+        System.out.println();
+    }
+
+    public static void imp(String text) {
+        System.out.print("\033[36m");
+        System.out.print("\t│  ");
+        System.out.print("\033[0m");
+        System.out.print("\033[35m"+text+"\033[0m");
+        for (int j = 0; j < TOTAL_WIDTH - 4 - text.length(); j++) {
+            System.out.print(" ");
+        }
         System.out.print("\033[36m");
         System.out.print("  │");
         System.out.print("\033[0m");

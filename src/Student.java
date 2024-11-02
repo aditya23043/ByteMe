@@ -17,7 +17,6 @@ public class Student {
 
     public void dashboard() {
         Header.clearScreen();
-        Header.title();
         Header.top("Student Dashboard");
 
         Header.content("1. Place Order");
