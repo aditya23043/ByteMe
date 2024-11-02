@@ -7,21 +7,27 @@ public class Header {
     public static void title() {
         System.out.println("""
 \033[36m\
-\t  ____        _         __  __      _ 
-\t | __ ) _   _| |_ ___  |  \\/  | ___| |
-\t |  _ \\| | | | __/ _ \\ | |\\/| |/ _ \\ |
-\t | |_) | |_| | ||  __/ | |  | |  __/_|
-\t |____/ \\__, |\\__\\___| |_|  |_|\\___(_)
-\t        |___/                         \033[0m""");
+\t$$$$$$$\\              $$\\                     $$\\      $$\\           $$\\
+\t$$  __$$\\             $$ |                    $$$\\    $$$ |          $$ |
+\t$$ |  $$ |$$\\   $$\\ $$$$$$\\    $$$$$$\\        $$$$\\  $$$$ | $$$$$$\\  $$ |
+\t$$$$$$$\\ |$$ |  $$ |\\_$$  _|  $$  __$$\\       $$\\$$\\$$ $$ |$$  __$$\\ $$ |
+\t$$  __$$\\ $$ |  $$ |  $$ |    $$$$$$$$ |      $$ \\$$$  $$ |$$$$$$$$ |\\__|
+\t$$ |  $$ |$$ |  $$ |  $$ |$$\\ $$   ____|      $$ |\\$  /$$ |$$   ____|    
+\t$$$$$$$  |\\$$$$$$$ |  \\$$$$  |\\$$$$$$$\\       $$ | \\_/ $$ |\\$$$$$$$\\ $$\\ 
+\t\\_______/  \\____$$ |   \\____/  \\_______|      \\__|     \\__| \\_______|\\__|
+\t          $$\\   $$ |                                                     
+\t          \\$$$$$$  |                                                     
+\t           \\______/                                                      \033[0m""");
     }
 
     public static void top(String text) {
 
+        System.out.print("\033[36m");
         int x = (TOTAL_WIDTH - text.length())/2;
 
         System.out.println();
         System.out.println();
-        System.out.print("\t┌");
+        System.out.print("\t╭");
         for (int i = 0; i < x; i++) {
             System.out.print("─");
         }
@@ -29,7 +35,7 @@ public class Header {
         for (int i = 0; i < ((text.length()%2==0)? x : x+1) ; i++) {
             System.out.print("─");
         }
-        System.out.print("┐");
+        System.out.print("╮");
         System.out.println();
 
         System.out.print("\t│  ");
@@ -38,12 +44,15 @@ public class Header {
         }
         System.out.print("  │");
         System.out.println();
+        System.out.print("\033[0m");
 
     }
 
     public static void content(String text) {
         // left border
+        System.out.print("\033[36m");
         System.out.print("\t│  ");
+        System.out.print("\033[0m");
 
         // main content
         int num_of_chars_written_in_this_line = 0;
@@ -82,13 +91,16 @@ public class Header {
         }
 
         // right border
+        System.out.print("\033[36m");
         System.out.print("  │");
+        System.out.print("\033[0m");
         System.out.println();
     }
 
 
     public static void bottom() {
 
+        System.out.print("\033[36m");
         System.out.print("\t│  ");
         for (int i = 0; i < TOTAL_WIDTH - PADDING; i++) {
             System.out.print(" ");
@@ -96,11 +108,12 @@ public class Header {
         System.out.print("  │");
         System.out.println();
 
-        System.out.print("\t└");
+        System.out.print("\t╰");
         for (int i = 0; i < TOTAL_WIDTH; i++) {
             System.out.print("─");
         }
-        System.out.print("┘");
+        System.out.print("╯");
+        System.out.print("\033[0m");
         System.out.println();
 
     }

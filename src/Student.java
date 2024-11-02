@@ -29,7 +29,7 @@ public class Student {
 
         Header.bottom();
 
-        System.out.print("\n\t>> Choose: ");
+        System.out.print("\n\t\033[36m>>\033[0m Choose: ");
         try{
             scanner.nextInt();
         }
