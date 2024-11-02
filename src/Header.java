@@ -4,16 +4,29 @@ public class Header {
     // one for left border and one for right
     private static final int PADDING = 2+2;
 
-    public static void top() {
+    public static void title() {
+        System.out.println("""
+\033[36m\
+\t  ____        _         __  __      _ 
+\t | __ ) _   _| |_ ___  |  \\/  | ___| |
+\t |  _ \\| | | | __/ _ \\ | |\\/| |/ _ \\ |
+\t | |_) | |_| | ||  __/ | |  | |  __/_|
+\t |____/ \\__, |\\__\\___| |_|  |_|\\___(_)
+\t        |___/                         \033[0m""");
+    }
+
+    public static void top(String text) {
+
+        int x = (TOTAL_WIDTH - text.length())/2;
 
         System.out.println();
         System.out.println();
         System.out.print("\t┌");
-        for (int i = 0; i < TOTAL_WIDTH / 2 - 4; i++) {
+        for (int i = 0; i < x; i++) {
             System.out.print("─");
         }
-        System.out.print("Byte Me!");
-        for (int i = 0; i < TOTAL_WIDTH / 2 - 4; i++) {
+        System.out.print(text);
+        for (int i = 0; i < ((text.length()%2==0)? x : x+1) ; i++) {
             System.out.print("─");
         }
         System.out.print("┐");
@@ -90,6 +103,11 @@ public class Header {
         System.out.print("┘");
         System.out.println();
 
+    }
+
+    public static void clearScreen() {
+        System.out.println("\033[H");
+        System.out.println("\033[2J");
     }
 
 }
