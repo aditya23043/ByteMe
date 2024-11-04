@@ -22,14 +22,10 @@ public class Customer {
     private ArrayList<Food> shopping_cart = new ArrayList<>();
 
     private void add_item(int id) throws CustomException {
-        for (Food food : Menu.get_list()) {
-            if (food.get_index() == id) {
-                shopping_cart.add(food);
-                break;
-            }
-            else if (Menu.get_list().getLast().equals(food)) {
-                throw new CustomException("Index not found!");
-            }
+        if (id > Menu.get_list().size()) {
+            throw new CustomException("Index not found!");
+        } else {
+            shopping_cart.add(Menu.get_list().get(id-1));
         }
     }
 
@@ -39,10 +35,8 @@ public class Customer {
             Header.top("Student Dashboard");
 
             Header.content("1. Place Order");
-            Header.content("2. Browse menu");
-            Header.content("3. Orders");
-            Header.content("4. View Cart");
-            Header.content("5. Item Review");
+            Header.content("2. Orders");
+            Header.content("3. Item Review");
             Header.content("q. Quit");
 
             Header.bottom();
@@ -61,11 +55,8 @@ public class Customer {
 
     private void handle_choice(int choice) throws CustomException {
         switch (choice) {
-            // place orders
-            case 1:
-                break;
             // browse menu
-            case 2:
+            case 1:
 
                 ArrayList<Food> menu_list = new ArrayList<Food>();
                 for (Food something : Menu.get_list()) {
@@ -95,8 +86,9 @@ public class Customer {
                     Header.content("1. Search");
                     Header.content("2. Filter by category");
                     Header.content("3. Sort by price");
-                    Header.content("4. Original Layout");
+                    Header.content("4. Original Menu");
                     Header.content("5. Add to Cart");
+                    Header.content("6. View Cart");
                     Header.content("q. Quit");
                     Header.bottom();
 
@@ -201,30 +193,34 @@ public class Customer {
                             }
 
                             break;
+                        case 6:
+                            Header.top("Shopping Cart");
+                            for (Food food : shopping_cart) {
+                                Header.content("ID "+food.get_index()+" : "+food.get_title()+" : ₹"+food.get_price());
+                            }
+                            if (shopping_cart.isEmpty()) {
+                                Header.content_center("- NONE -");
+                            }
+                            Header.bottom();
+                            System.out.print("\n\tPress enter to continue...");
+                            try {
+                                System.in.read();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            break;
                         default:
                             throw new CustomException("Invalid Choice!");
                     }
 
                 }
                 break;
+            // orders
+            case 2:
+                break;
+            // item review
             case 3:
-                break;
-            case 4:
-                Header.top("Shopping Cart");
-                System.out.println(shopping_cart.size());
-                for (Food food : shopping_cart) {
-                    Header.content("ID "+food.get_index()+" : "+food.get_title()+" : ₹"+food.get_price());
-                }
-                Header.bottom();
-                System.out.print("\n\tPress enter to continue...");
-                try {
-                    System.in.read();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 5:
-                break;
+               break;
             default:
                 throw new CustomException("Invalid Choice!");
         }
