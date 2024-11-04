@@ -141,4 +141,24 @@ public class Header {
         System.out.println("\033[2J");
     }
 
+    public static void content_center(String text) {
+
+        System.out.print("\033[36m");
+        System.out.print("\t│  ");
+        System.out.print("\033[0m");
+        if (text.length() <= TOTAL_WIDTH-PADDING) {
+            for (int i = 0; i < (TOTAL_WIDTH-PADDING-text.length())/2; i++) {
+                System.out.print(" ");
+            }
+            System.out.print(text);
+            for (int i = 0; i < TOTAL_WIDTH-text.length()-((TOTAL_WIDTH-PADDING-text.length())/2)-PADDING; i++) {
+                System.out.print(" ");
+            }
+        }
+        System.out.print("\033[36m");
+        System.out.print("  │");
+        System.out.print("\033[0m");
+        System.out.println();
+    }
+
 }

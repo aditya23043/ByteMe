@@ -7,9 +7,7 @@ public class Dashboard {
     Scanner scanner;
 
     public void init() throws CustomException, InterruptedException {
-        while (true){
-            choose_user_type();
-        }
+        choose_user_type();
     }
 
     private void choose_user_type() throws CustomException, InterruptedException {
@@ -17,7 +15,7 @@ public class Dashboard {
         Header.title();
         Header.top("Dashboard");
         Header.content("1. Admin");
-        Header.content("2. Student");
+        Header.content("2. Customer");
         Header.content("q. Quit");
         Header.bottom();
 
@@ -39,7 +37,8 @@ public class Dashboard {
                 admin.dashboard();
                 break;
             case 2:
-                Student student = new Student();
+                Customer customer = new Customer();
+                customer.dashboard();
                 break;
             default:
                 throw new CustomException("Invalid Choice!");

@@ -51,16 +51,14 @@ public class Admin {
     private void manage_menu() throws CustomException, InterruptedException {
 
         Header.clearScreen();
-        int id = 0;
 
         Header.top("Menu");
         for (Food food_item : Menu.get_list()) {
-            Header.imp(food_item.get_title() + " [ID: " + id + "]");
+            Header.imp(food_item.get_title() + " [ID: " + food_item.get_index() + "]");
             Header.content("Price: ₹" + food_item.get_price() + "\nType: " + food_item.get_category() + "\nAvailable: " + food_item.get_availability());
             if (!Menu.get_list().getLast().equals(food_item)) {
                 Header.content("\n");
             }
-            id++;
         }
         Header.bottom();
 
@@ -128,6 +126,7 @@ public class Admin {
                             break;
                         case 7:
                             category = FoodType.NULL;
+                            break;
                         default:
                             throw new CustomException("Invalid Input!");
                     }
@@ -228,6 +227,8 @@ public class Admin {
                     System.out.println("\n\t\033[32mItem removed successfully!\033[0m");
                     TimeUnit.SECONDS.sleep(1);
                     break;
+                default:
+                    throw new CustomException("Invalid Choice!");
             }
 
         } catch (InputMismatchException e) {
@@ -241,7 +242,6 @@ public class Admin {
     private void manage_orders() {
 
             Header.clearScreen();
-            Header.title();
             Header.top("Manage Orders");
 
             Header.content("1. View Pending Orders");
