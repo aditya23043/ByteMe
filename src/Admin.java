@@ -462,7 +462,16 @@ public class Admin {
 class OrderComparator implements Comparator<Order> {
     @Override
     public int compare(Order a, Order b) {
-        if (a.get_id() == b.get_id()) {
+        if (a.get_ctype().equals(CustomerType.VIP) && b.get_ctype().equals(CustomerType.REGULAR)) {
+            return 1;
+        }
+        else if (a.get_ctype().equals(CustomerType.VIP) && b.get_ctype().equals(CustomerType.VIP)) {
+            return 0;
+        }
+        else if (a.get_ctype().equals(CustomerType.REGULAR) && b.get_ctype().equals(CustomerType.VIP)) {
+            return -1;
+        }
+        else if (a.get_id() == b.get_id()) {
             return 0;
         }
         else if (a.get_id() > b.get_id()) {

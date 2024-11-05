@@ -11,11 +11,13 @@ public class Order {
     private String customer_address;
     private ArrayList<FoodPair> food_list = new ArrayList<>();
     private String special_requests;
+    private CustomerType customer_type;
 
-    Order(ArrayList<FoodPair> _food_list, String _address, String special_reqs) {
+    Order(ArrayList<FoodPair> _food_list, String _address, String special_reqs, CustomerType cType) {
         this.order_id = index;
         this.customer_address = _address;
         this.special_requests = special_reqs;
+        this.customer_type = cType;
         index++;
         for (FoodPair foodPair : _food_list) {
             food_list.add(foodPair);
@@ -94,7 +96,11 @@ public class Order {
     }
 
     public void reorder() {
-        Order new_order = new Order(this.food_list, this.customer_address, this.special_requests);
+        Order new_order = new Order(this.food_list, this.customer_address, this.special_requests, this.customer_type);
+    }
+
+    public CustomerType get_ctype() {
+        return this.customer_type;
     }
 
     public int get_amt() {

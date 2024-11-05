@@ -332,7 +332,7 @@ public class Customer {
                                 String address = scanner.nextLine();
                                 System.out.print("\tEnter any special requests (if any): ");
                                 String special_reqs = scanner.nextLine();
-                                Order order = new Order(this.shopping_cart, address, special_reqs);
+                                Order order = new Order(this.shopping_cart, address, special_reqs, cType);
                                 int final_price = 0;
                                 for (FoodPair food_pair : shopping_cart) {
                                     final_price += (food_pair.food.get_price()*food_pair.quantity);
