@@ -161,4 +161,29 @@ public class Header {
         System.out.println();
     }
 
+    public static void line() {
+        System.out.print("\033[36m");
+        System.out.print("\t│  ");
+        for (int i = 0; i < TOTAL_WIDTH-PADDING; i++) {
+            System.out.print(" ");
+        }
+        System.out.print("  │");
+        System.out.println();
+        System.out.print("\t├");
+        for (int i = 0; i < TOTAL_WIDTH; i++) {
+            System.out.print("─");
+        }
+        System.out.print("┤");
+        System.out.println();
+        System.out.println();
+        System.out.print("\t│  ");
+        for (int i = 0; i < TOTAL_WIDTH-PADDING; i++) {
+            System.out.print(" ");
+        }
+        System.out.print("  │");
+        System.out.println();
+        System.out.print("\033[0m");
+
+    }
+
 }

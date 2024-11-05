@@ -19,20 +19,37 @@ public class Customer {
 
     // actual fields
     private CUSTOMER_TYPE cType;
-    private ArrayList<Food> shopping_cart = new ArrayList<>();
+    private ArrayList<FoodPair> shopping_cart = new ArrayList<>();
 
-    private void add_item(int id) throws CustomException {
-        if (id > Menu.get_list().size()) {
-            throw new CustomException("Index not found!");
-        } else {
-            shopping_cart.add(Menu.get_list().get(id-1));
+    private void add_item(int id, int qty) throws CustomException {
+        Boolean contains = false;
+        for (Food food : Menu.get_list()) {
+            if (food.get_index() == id) {
+                if (!food.get_availability()) {
+                    throw new CustomException("Food Not Available as of this moment!");
+                }
+                for(FoodPair food_pair : shopping_cart){
+                    if (food_pair.food.equals(food)) {
+                        contains = true;
+                        food_pair.quantity += qty;
+                        break;
+                    }
+                }
+                if (!contains) {
+                    shopping_cart.add(new FoodPair(Menu.get_list().get(id - 1), qty));
+                }
+                break;
+            }
+            else if (Menu.get_list().getLast().equals(food)) {
+                throw new CustomException("Item not found!");
+            }
         }
     }
 
     public void dashboard() throws CustomException {
         while (true) {
             Header.clearScreen();
-            Header.top("Student Dashboard");
+            Header.top("Customer Dashboard");
 
             Header.content("1. Place Order");
             Header.content("2. Orders");
@@ -89,6 +106,7 @@ public class Customer {
                     Header.content("4. Original Menu");
                     Header.content("5. Add to Cart");
                     Header.content("6. View Cart");
+                    Header.content("7. Checkout");
                     Header.content("q. Quit");
                     Header.bottom();
 
@@ -183,8 +201,10 @@ public class Customer {
                             System.out.print("\n\tEnter Food Item ID: ");
                             int id = scanner.nextInt();
                             scanner.nextLine();
-                            add_item(id);
-                            System.out.println(shopping_cart.size());
+                            System.out.print("\n\tEnter the Quantity: ");
+                            int qty = scanner.nextInt();
+                            scanner.nextLine();
+                            add_item(id,qty);
                             System.out.print("\n\t\033[32mSuccessfully added item to cart!\033[0m");
                             try {
                                 TimeUnit.MILLISECONDS.sleep(500);
@@ -195,8 +215,8 @@ public class Customer {
                             break;
                         case 6:
                             Header.top("Shopping Cart");
-                            for (Food food : shopping_cart) {
-                                Header.content("ID "+food.get_index()+" : "+food.get_title()+" : ₹"+food.get_price());
+                            for (FoodPair food_pair : shopping_cart) {
+                                Header.content("ID "+food_pair.food.get_index()+" : "+food_pair.food.get_title()+" : ₹"+food_pair.food.get_price()+" x "+food_pair.quantity);
                             }
                             if (shopping_cart.isEmpty()) {
                                 Header.content_center("- NONE -");
@@ -209,6 +229,23 @@ public class Customer {
                                 e.printStackTrace();
                             }
                             break;
+                        case 7:
+                            if (this.shopping_cart.isEmpty()) {
+                                throw new CustomException("Shopping cart is empty!");
+                            }
+                            else {
+                                Order order = new Order(this.shopping_cart);
+                                System.out.println(Order.get_list().size());
+                                System.out.print("\n\t\033[32mSuccessfully placed the order!\033[0m");
+                                try {
+                                    TimeUnit.SECONDS.sleep(1);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                shopping_cart.clear();
+                            }
+
+                            break;
                         default:
                             throw new CustomException("Invalid Choice!");
                     }
@@ -217,6 +254,30 @@ public class Customer {
                 break;
             // orders
             case 2:
+                Header.clearScreen();
+                Header.top("Orders");
+                for (Order order : Order.get_list()) {
+                    Header.content("Order ID: " + order.get_id());
+                    Header.content("Order Qty: " + order.get_qty()+"\n");
+                    Header.content("Status: " + order.get_status()+"\n");
+                    for (FoodPair food_pair : order.get_food_list()) {
+                        Header.content("\t ID:"+food_pair.food.get_index()+" "+food_pair.food.get_title() + " : " + food_pair.food.get_price() + " x "
+                                + food_pair.quantity);
+                    }
+                    if (Order.get_list().size() > 1 && !Order.get_list().getLast().equals(order)) {
+                        Header.line();
+                    }
+                }
+                if (Order.get_list().isEmpty()) {
+                    Header.content_center("- NONE -");
+                }
+                Header.bottom();
+                System.out.print("\n\tPress enter to continue...");
+                try {
+                    System.in.read();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             // item review
             case 3:
