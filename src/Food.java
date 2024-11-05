@@ -6,8 +6,10 @@ class Food {
     private FoodType category;
     private Boolean availability;
 
+    static int count = 1;
+
     Food(String food_name, int food_price, FoodType food_category, Boolean food_availability) {
-        this.index = Menu.get_list().size()+1;
+        this.index = count++;
         this.title = food_name;
         this.price = food_price;
         this.category = food_category;

@@ -1,6 +1,6 @@
 public class Header {
 
-    private static final int TOTAL_WIDTH = 40;
+    private static final int TOTAL_WIDTH = 72;
     // one for left border and one for right
     private static final int PADDING = 2+2;
 
@@ -105,7 +105,7 @@ public class Header {
         System.out.print("\033[36m");
         System.out.print("\t│  ");
         System.out.print("\033[0m");
-        System.out.print("\033[35m"+text+"\033[0m");
+        System.out.print("\033[33m"+text+"\033[0m");
         for (int j = 0; j < TOTAL_WIDTH - 4 - text.length(); j++) {
             System.out.print(" ");
         }
@@ -174,7 +174,6 @@ public class Header {
             System.out.print("─");
         }
         System.out.print("┤");
-        System.out.println();
         System.out.println();
         System.out.print("\t│  ");
         for (int i = 0; i < TOTAL_WIDTH-PADDING; i++) {

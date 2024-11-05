@@ -10,15 +10,11 @@ import java.util.stream.Collectors;
 public class Customer {
 
     // util fields
-    enum CUSTOMER_TYPE {
-        VIP,
-        REGULAR
-    }
-
     Scanner scanner = new Scanner(System.in);
+    int id;
 
     // actual fields
-    private CUSTOMER_TYPE cType;
+    private CustomerType cType = CustomerType.REGULAR;
     private ArrayList<FoodPair> shopping_cart = new ArrayList<>();
 
     private void add_item(int id, int qty) throws CustomException {
@@ -26,22 +22,35 @@ public class Customer {
         for (Food food : Menu.get_list()) {
             if (food.get_index() == id) {
                 if (!food.get_availability()) {
-                    throw new CustomException("Food Not Available as of this moment!");
+                    Util.throw_error("Food Not Available as of this moment!");
+                    break;
                 }
                 for(FoodPair food_pair : shopping_cart){
                     if (food_pair.food.equals(food)) {
                         contains = true;
                         food_pair.quantity += qty;
+                        System.out.print("\n\t\033[32mSuccessfully added item to cart!\033[0m");
+                        try {
+                            TimeUnit.MILLISECONDS.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         break;
                     }
                 }
                 if (!contains) {
-                    shopping_cart.add(new FoodPair(Menu.get_list().get(id - 1), qty));
+                    shopping_cart.add(new FoodPair(food, qty));
+                    System.out.print("\n\t\033[32mSuccessfully added item to cart!\033[0m");
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             }
             else if (Menu.get_list().getLast().equals(food)) {
-                throw new CustomException("Item not found!");
+                Util.throw_error("Item not found!");
             }
         }
     }
@@ -54,6 +63,7 @@ public class Customer {
             Header.content("1. Place Order");
             Header.content("2. Orders");
             Header.content("3. Item Review");
+            Header.content("4. Upgrade to VIP");
             Header.content("q. Quit");
 
             Header.bottom();
@@ -86,27 +96,45 @@ public class Customer {
                     Header.clearScreen();
 
                     Header.top(table_title);
-                    for (Food food_item : menu_list) {
-                        Header.imp(food_item.get_title() + " [ID: " + food_item.get_index() + "]");
-                        Header.content("Price: ₹" + food_item.get_price() + "\nType: " + food_item.get_category()
-                                + "\nAvailable: " + food_item.get_availability());
-                        if (!menu_list.getLast().equals(food_item)) {
-                            Header.content("\n");
-                        }
-                    }
                     if (menu_list.isEmpty()) {
                         Header.content_center("- NONE -");
+                    } else {
+                        for (Food food_item : menu_list) {
+                            Header.imp(food_item.get_title() + " [ID: " + food_item.get_index() + "]");
+                            Header.content("Price: ₹" + food_item.get_price() + " │ Type: " + food_item.get_category()
+                                    + " │ Available: " + food_item.get_availability());
+                            if (!menu_list.getLast().equals(food_item)) {
+                                Header.content("\n");
+                            }
+                        }
                     }
                     Header.bottom();
 
+                    Header.top("Shopping Cart");
+                    if (shopping_cart.isEmpty()) {
+                        Header.content_center("- NONE -");
+                    } else {
+                        for (FoodPair food_pair : shopping_cart) {
+                            Header.content("ID "+food_pair.food.get_index()+" : "+food_pair.food.get_title()+" : ₹"+food_pair.food.get_price()+" x "+food_pair.quantity);
+                        }
+                    }
+                    int total_price = 0;
+                    for (FoodPair food_pair : shopping_cart) {
+                        total_price += (food_pair.food.get_price()*food_pair.quantity);
+                    }
+                    Header.line();
+                    Header.content_center("Total Price: ₹"+total_price);
+                    Header.bottom();
+
                     Header.top("Options");
-                    Header.content("1. Search");
-                    Header.content("2. Filter by category");
-                    Header.content("3. Sort by price");
+                    Header.content("1. Search menu");
+                    Header.content("2. Filter menu by category");
+                    Header.content("3. Sort menu by price");
                     Header.content("4. Original Menu");
                     Header.content("5. Add to Cart");
-                    Header.content("6. View Cart");
-                    Header.content("7. Checkout");
+                    Header.content("6. Remove Item from Cart");
+                    Header.content("7. Modify Item Qty from Cart");
+                    Header.content("8. Checkout");
                     Header.content("q. Quit");
                     Header.bottom();
 
@@ -165,7 +193,8 @@ public class Customer {
                                     table_title = "Menu [Filter:NULL]";
                                     break;
                                 default:
-                                    throw new CustomException("Invalid Input!");
+                                    Util.throw_error("Invalid Choice");
+                                    break;
                             }
                             scanner.nextLine();
                             final FoodType category = _category;
@@ -199,91 +228,244 @@ public class Customer {
                             break;
                         case 5:
                             System.out.print("\n\tEnter Food Item ID: ");
-                            int id = scanner.nextInt();
+                            id = scanner.nextInt();
                             scanner.nextLine();
                             System.out.print("\n\tEnter the Quantity: ");
                             int qty = scanner.nextInt();
                             scanner.nextLine();
                             add_item(id,qty);
-                            System.out.print("\n\t\033[32mSuccessfully added item to cart!\033[0m");
-                            try {
-                                TimeUnit.MILLISECONDS.sleep(500);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
 
                             break;
                         case 6:
-                            Header.top("Shopping Cart");
-                            for (FoodPair food_pair : shopping_cart) {
-                                Header.content("ID "+food_pair.food.get_index()+" : "+food_pair.food.get_title()+" : ₹"+food_pair.food.get_price()+" x "+food_pair.quantity);
-                            }
                             if (shopping_cart.isEmpty()) {
-                                Header.content_center("- NONE -");
-                            }
-                            Header.bottom();
-                            System.out.print("\n\tPress enter to continue...");
-                            try {
-                                System.in.read();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        case 7:
-                            if (this.shopping_cart.isEmpty()) {
-                                throw new CustomException("Shopping cart is empty!");
-                            }
-                            else {
-                                Order order = new Order(this.shopping_cart);
-                                System.out.println(Order.get_list().size());
-                                System.out.print("\n\t\033[32mSuccessfully placed the order!\033[0m");
+                                System.out.println("\n\t\033[31mCart is empty!\033[0m");
                                 try {
                                     TimeUnit.SECONDS.sleep(1);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
+                                break;
+                            }
+                            System.out.print("\n\tEnter Food Item ID: ");
+                            id = scanner.nextInt();
+                            scanner.nextLine();
+                            for (FoodPair food_pair : shopping_cart) {
+                                if (food_pair.food.get_index() == id) {
+                                    shopping_cart.remove(food_pair);
+                                    System.out.print("\n\t\033[32mSuccessfully removed item from cart!\033[0m");
+                                    try {
+                                        TimeUnit.SECONDS.sleep(1);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                                }
+                                if (shopping_cart.getLast().equals(food_pair)) {
+                                    System.out.print("\n\t\033[31mItem not found!\033[0m");
+                                    try {
+                                        TimeUnit.SECONDS.sleep(1);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                            break;
+                        case 7:
+                            if (shopping_cart.isEmpty()) {
+                                System.out.println("\n\t\033[31mCart is empty!\033[0m");
+                                try {
+                                    TimeUnit.SECONDS.sleep(1);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                            }
+                            System.out.print("\n\tEnter Food Item ID: ");
+                            id = scanner.nextInt();
+                            scanner.nextLine();
+                            int new_qty;
+                            System.out.print("\n\tEnter the new quantity: ");
+                            new_qty = scanner.nextInt();
+                            scanner.nextLine();
+                            if (new_qty < 1) {
+                                System.out.println("\n\t\033[31mNew quantity can't be less than 1!\033[0m");
+                                try {
+                                    TimeUnit.SECONDS.sleep(1);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                            }
+                            for (FoodPair food_pair : shopping_cart) {
+                                if (food_pair.food.get_index() == id) {
+                                    food_pair.quantity = new_qty;
+                                    System.out.print("\n\t\033[32mSuccessfully updated item's quantity!\033[0m");
+                                    try {
+                                        TimeUnit.SECONDS.sleep(1);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                                }
+                                if (shopping_cart.getLast().equals(food_pair)) {
+                                    System.out.print("\n\t\033[31mItem not found!\033[0m");
+                                    try {
+                                        TimeUnit.SECONDS.sleep(1);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                            break;
+                        case 8:
+                            if (this.shopping_cart.isEmpty()) {
+                                System.out.print("\n\t\033[31mCart is empty!\033[0m");
+                                try {
+                                    TimeUnit.SECONDS.sleep(1);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                            }
+                            else {
+                                System.out.print("\tEnter delivery address: ");
+                                String address = scanner.nextLine();
+                                System.out.print("\tEnter any special requests (if any): ");
+                                String special_reqs = scanner.nextLine();
+                                Order order = new Order(this.shopping_cart, address, special_reqs);
+                                int final_price = 0;
+                                for (FoodPair food_pair : shopping_cart) {
+                                    final_price += (food_pair.food.get_price()*food_pair.quantity);
+                                }
+                                System.out.println("\tAmount to be paid: ₹"+final_price);
                                 shopping_cart.clear();
+                                System.out.print("\n\tPress enter to continue...");
+                                try {
+                                    System.in.read();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                System.out.print("\n\t\033[32mSuccessfully placed the order!\033[0m");
+                                try {
+                                    TimeUnit.MILLISECONDS.sleep(500);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                             break;
                         default:
-                            throw new CustomException("Invalid Choice!");
+                            System.out.println("\n\t\033[31mInvalid Choice!\033[0m");
+                            try {
+                                TimeUnit.SECONDS.sleep(1);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                     }
 
                 }
                 break;
             // orders
             case 2:
-                Header.clearScreen();
-                Header.top("Orders");
-                for (Order order : Order.get_list()) {
-                    Header.content("Order ID: " + order.get_id());
-                    Header.content("Order Qty: " + order.get_qty()+"\n");
-                    Header.content("Status: " + order.get_status()+"\n");
-                    for (FoodPair food_pair : order.get_food_list()) {
-                        Header.content("\t ID:"+food_pair.food.get_index()+" "+food_pair.food.get_title() + " : " + food_pair.food.get_price() + " x "
-                                + food_pair.quantity);
+                while (true) {
+                    Header.clearScreen();
+                    Header.top("Orders");
+                    for (Order order : Order.get_list()) {
+                        Header.content("Order ID: " + order.get_id());
+                        Header.content("Order Qty: " + order.get_qty());
+                        Header.content("Order Amount: ₹" + order.get_amt() + "\n");
+                        Header.content("Status: " + order.get_status() + "\n");
+                        for (FoodPair food_pair : order.get_food_list()) {
+                            Header.content("\t ID:" + food_pair.food.get_index() + " " + food_pair.food.get_title()
+                                    + " : " + food_pair.food.get_price() + " x "
+                                    + food_pair.quantity);
+                        }
+                        if (Order.get_list().size() > 1 && !Order.get_list().getLast().equals(order)) {
+                            Header.line();
+                        }
                     }
-                    if (Order.get_list().size() > 1 && !Order.get_list().getLast().equals(order)) {
-                        Header.line();
+                    if (Order.get_list().isEmpty()) {
+                        Header.content_center("- NONE -");
                     }
-                }
-                if (Order.get_list().isEmpty()) {
-                    Header.content_center("- NONE -");
-                }
-                Header.bottom();
-                System.out.print("\n\tPress enter to continue...");
-                try {
-                    System.in.read();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    Header.bottom();
+                    System.out.println("\n\t1. Cancel Order");
+                    System.out.println("\t2. Re-order");
+                    System.out.println("\tq. quit");
+                    System.out.print("\n\t\033[36m>>\033[0m Choose: ");
+                    choice = 0;
+                    try {
+                        choice = scanner.nextInt();
+                        switch (choice) {
+                            case 1:
+                                if (Order.get_list().isEmpty()) {
+                                    Util.throw_error("No orders left!");
+                                } else {
+                                    System.out.print("\n\tEnter the ID of the order you want to cancel: ");
+                                    int id = scanner.nextInt();
+
+                                    for (Order order : Order.get_list()) {
+                                        if (order.get_id() == id) {
+                                            order.cancel();
+                                            System.out.print("\n\t\033[32mOrder Cancelled Successfully!\033[0m");
+                                            TimeUnit.SECONDS.sleep(1);
+                                            break;
+                                        } else if (Order.get_list().getLast().equals(order)) {
+                                            Util.throw_error("Order not found!");
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+
+                            case 2:
+                                if (Order.get_list().isEmpty()) {
+                                    Util.throw_error("No orders left!");
+                                } else {
+                                    System.out.print("\n\tEnter the ID of the order you want to re-order: ");
+                                    int id = scanner.nextInt();
+
+                                    for (Order order : Order.get_list()) {
+                                        if (order.get_id() == id) {
+                                            order.reorder();
+                                            System.out.print("\n\t\033[32mOrder Re-ordered Successfully!\033[0m");
+                                            TimeUnit.SECONDS.sleep(1);
+                                            break;
+                                        } else if (Order.get_list().getLast().equals(order)) {
+                                            Util.throw_error("Order not found!");
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+
+                            default:
+                                Util.throw_error("Invalid Choice!");
+                                break;
+                        }
+                    } catch (InputMismatchException e) {
+                        break;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             // item review
             case 3:
                break;
+
+            // vip
+            case 4:
+                System.out.println("\tPay Rs. 1000 to become a VIP member...(press enter to continue)");
+                try {
+                    System.in.read();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                this.cType = CustomerType.VIP;
+                break;
             default:
-                throw new CustomException("Invalid Choice!");
+                Util.throw_error("Invalid Choice!");
         }
     }
 
@@ -303,4 +485,3 @@ class PriceComparator implements Comparator<Food> {
         }
     }
 }
-
