@@ -2,6 +2,10 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
+
 public class Dashboard {
 
     Scanner scanner;
@@ -16,6 +20,7 @@ public class Dashboard {
         Header.top("Dashboard");
         Header.content("1. Admin");
         Header.content("2. Customer");
+        Header.content("3. Show GUI");
         Header.content("q. Quit");
         Header.bottom();
 
@@ -39,6 +44,9 @@ public class Dashboard {
             case 2:
                 Customer customer = new Customer();
                 customer.dashboard();
+                break;
+            case 3:
+                MainFrame.render();
                 break;
             default:
                 throw new CustomException("Invalid Choice!");

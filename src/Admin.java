@@ -285,6 +285,8 @@ public class Admin {
             } catch (InputMismatchException e) {
                 // NOTE: Return to the previous menu when any char entered
                 return;
+            } finally {
+                MainFrame.render();
             }
 
         }

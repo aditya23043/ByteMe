@@ -6,6 +6,9 @@
 ```
 make
 ```
+> [!IMPORTANT]  
+> All the icons in this program are from nerd fonts [Nerd Fonts](https://nerdfonts.com)\
+> Ensure that you have installed any nerd font from [Fonts Download](https://nerdfonts.com/font-downloads)
 
 ## Unique Feature
 - The dynamically changing text inside the box is a feature which I had seen in multiple CLIs in the past but just recently got to know about the `Nu Shell` project (i am using the fish shell currently). The concept is that everything in it is a data record / table and hence even basic unix commands like `ls` or `ps` are shown properly tabularized with properly labelled columns
@@ -18,6 +21,7 @@ make
 
 ## Dev Log
 - (Still a work in progress as of 11:14PM 05/11/24)
+- as always i forgot to log my journey and im writing this when im almost at the end
 
 ## Assumptions
 - Refunds will be handed back through whatever means possible at that time and will not be logged in this program just because as of now I do not want to create a new functionality for wa wallet system since it is nearing submission and it was not explicitly mentioned to do so in the PDF

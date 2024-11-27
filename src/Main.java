@@ -1,3 +1,7 @@
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.JFrame;
+
 /**
  * Class: Main
  * Author: Aditya Gautam
@@ -17,21 +21,21 @@ public class Main {
      */
     public static void main(String[] args) throws CustomException, InterruptedException {
 
+        boolean running = true;
         Menu.sample_values();
 
-        Menu.show_gui();
+        // CLI
+        Dashboard dashboard = new Dashboard();
 
-        // Dashboard dashboard = new Dashboard();
-
-        // while (true) {
-        //     try{
-        //         dashboard.init();
-        //     }
-        //     catch (CustomException e) {
-        //         System.out.print("\n\t\033[31m"+e.getMessage()+"\033[0m");
-        //         TimeUnit.SECONDS.sleep(1);
-        //         continue;
-        //     }
-        // }
+        while (running) {
+            try{
+                dashboard.init();
+            }
+            catch (CustomException e) {
+                System.out.print("\n\t\033[31m"+e.getMessage()+"\033[0m");
+                TimeUnit.SECONDS.sleep(1);
+                continue;
+            }
+        }
     }
 }
