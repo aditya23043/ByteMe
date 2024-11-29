@@ -7,7 +7,7 @@
 make
 ```
 > [!IMPORTANT]  
-> All the icons in this program are from nerd fonts [Nerd Fonts](https://nerdfonts.com)\
+> All the icons in this program are from [Nerd Fonts](https://nerdfonts.com)\
 > Ensure that you have installed any nerd font from [Fonts Download](https://nerdfonts.com/font-downloads)
 
 ## Unique Feature
@@ -16,6 +16,7 @@ make
 - I have also implemented a common vim keybinding, 'q' which is used to quit popups (in neovim, not vim), splits, and in general, exiting a buffer.
 - I have also utilized color to add contrast to the textual content of my application
 - Furthermore, all errors have been shown in red color and my program waits for 0.5/1s (depending on the case) for the user to read the error and proceed
+- It was mentioned that we were not required to do parallel execution due to complexity, but I was able to achieve a similar illusion by updating the GUI whenever something related the GUI updated i.e. whenever the customer places order or an admin updates the menu etc..
 
 > NOTE: I intended this to be a proper dev log but due to other ongoing tasks, I was not able to fill this up as I moved along my project so, this is not just a brief summary of my dev log instead of a proper one
 

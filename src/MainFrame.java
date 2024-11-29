@@ -27,7 +27,7 @@ class MainFrame extends JFrame {
         this.setResizable(false);
         this.setSize(800, 800);
         this.setVisible(true);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         CardLayout card_layout = new CardLayout();
 
@@ -58,9 +58,9 @@ class MenuPanel extends JPanel implements ActionListener {
         JLabel top_label = new JLabel("MENU");
         top_label.setFont(title_font);
         top_label.setHorizontalAlignment(JLabel.CENTER);
-        top_label.setBorder(new EmptyBorder(10, 10, 10, 10));
+        top_label.setBorder(new EmptyBorder(20, 10, 20, 10));
 
-        String[] table_header = { "Index", "Item Name", "Price", "Category", "Availability" };
+        String[] table_header = { "Index", "Item Name", "Price", "Category", "Available" };
         DefaultTableModel model = new DefaultTableModel(table_header, 0);
 
         for (Food _food : Menu.get_list()) {
@@ -68,9 +68,9 @@ class MenuPanel extends JPanel implements ActionListener {
             Object[] row = { 
                 _food.get_index(),
                 _food.get_title(),
-                _food.get_price(),
+                "₹"+_food.get_price(),
                 _food.get_category(),
-                _food.get_availability() ? "✓" : "✗"
+                _food.get_availability()
             };
             model.addRow(row);
         }
@@ -78,7 +78,6 @@ class MenuPanel extends JPanel implements ActionListener {
         JTable table = new JTable(model);
         table.setRowHeight(40);
         table.setFont(main_font);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         // not editable
         table.setDefaultEditor(Object.class, null);
         table.setDefaultRenderer(Object.class, new PaddedCellRenderer());
@@ -87,7 +86,7 @@ class MenuPanel extends JPanel implements ActionListener {
         table.getColumnModel().getColumn(1).setPreferredWidth(320);
         table.getColumnModel().getColumn(2).setPreferredWidth(80);
         table.getColumnModel().getColumn(3).setPreferredWidth(160);
-        table.getColumnModel().getColumn(4).setPreferredWidth(142);
+        table.getColumnModel().getColumn(4).setPreferredWidth(80);
 
         JScrollPane scroll_pane = new JScrollPane(table);
 
@@ -125,7 +124,7 @@ class PendingOrdersPanel extends JPanel implements ActionListener {
         JLabel top_label = new JLabel("PENDING ORDERS");
         top_label.setFont(title_font);
         top_label.setHorizontalAlignment(JLabel.CENTER);
-        top_label.setBorder(new EmptyBorder(10, 10, 10, 10));
+        top_label.setBorder(new EmptyBorder(20, 10, 20, 10));
 
         String[] table_header = { "Order ID", "Quantity", "Total Amount", "Status" };
         DefaultTableModel model = new DefaultTableModel(table_header, 0);
@@ -135,7 +134,7 @@ class PendingOrdersPanel extends JPanel implements ActionListener {
             Object[] row = {
                     _order.get_id(),
                     _order.get_qty(),
-                    _order.get_amt(),
+                    "₹"+_order.get_amt(),
                     _order.get_status()
             };
             model.addRow(row);
@@ -144,15 +143,16 @@ class PendingOrdersPanel extends JPanel implements ActionListener {
         JTable table = new JTable(model);
         table.setRowHeight(50);
         table.setFont(main_font);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setDefaultRenderer(Object.class, new PaddedCellRenderer());
         // not editable
         table.setDefaultEditor(Object.class, null);
+        table.setDefaultRenderer(Object.class, new PaddedCellRenderer());
 
         JScrollPane scroll_pane = new JScrollPane(table);
 
         JButton pending_orders_button = new JButton("Show Menu 󰁔");
         pending_orders_button.setFont(button_font);
-        pending_orders_button.setBorder(new EmptyBorder(10, 10, 10, 10));
+        pending_orders_button.setBorder(new EmptyBorder(20, 10, 20, 10));
         pending_orders_button.addActionListener(this);
 
         this.add(top_label, BorderLayout.PAGE_START);

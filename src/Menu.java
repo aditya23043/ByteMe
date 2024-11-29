@@ -13,8 +13,8 @@ public class Menu {
 
     private static ArrayList<Food> MenuList = new ArrayList<Food>();
 
-    public static void add(String food_name, int food_price, FoodType food_category, Boolean food_availability) {
-        Food food = new Food(food_name, food_price, food_category, food_availability);
+    public static void add(String food_name, int food_price, FoodType food_category, Boolean food_availability, int stock) {
+        Food food = new Food(food_name, food_price, food_category, food_availability, stock);
         MenuList.add(food);
     }
 
@@ -23,27 +23,9 @@ public class Menu {
     }
 
     public static void sample_values() {
-        add("Pav Bhaji", 100, FoodType.MEAL, true);
-        add("Dosa", 50, FoodType.MEAL, false);
-        add("Fruit Punch", 75, FoodType.BEVERAGE, true);
-        add("Pav Bhaji", 100, FoodType.MEAL, true);
-        add("Dosa", 50, FoodType.MEAL, false);
-        add("Fruit Punch", 75, FoodType.BEVERAGE, true);
-        add("Pav Bhaji", 100, FoodType.MEAL, true);
-        add("Dosa", 50, FoodType.MEAL, false);
-        add("Fruit Punch", 75, FoodType.BEVERAGE, true);
-        add("Pav Bhaji", 100, FoodType.MEAL, true);
-        add("Dosa", 50, FoodType.MEAL, false);
-        add("Fruit Punch", 75, FoodType.BEVERAGE, true);
-        add("Pav Bhaji", 100, FoodType.MEAL, true);
-        add("Dosa", 50, FoodType.MEAL, false);
-        add("Fruit Punch", 75, FoodType.BEVERAGE, true);
-        add("Pav Bhaji", 100, FoodType.MEAL, true);
-        add("Dosa", 50, FoodType.MEAL, false);
-        add("Fruit Punch", 75, FoodType.BEVERAGE, true);
-        add("Pav Bhaji", 100, FoodType.MEAL, true);
-        add("Dosa", 50, FoodType.MEAL, false);
-        add("Fruit Punch", 75, FoodType.BEVERAGE, true);
+        add("Pav Bhaji", 100, FoodType.MEAL, true, 10);
+        add("Dosa", 50, FoodType.MEAL, false, 12);
+        add("Fruit Punch", 75, FoodType.BEVERAGE, true, 15);
     }
 
 }

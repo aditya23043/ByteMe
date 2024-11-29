@@ -115,4 +115,8 @@ public class Order {
         return this.special_requests.isEmpty() ? "None" : this.special_requests;
     }
 
+    public String get_address() {
+        return this.customer_address;
+    }
+
 }

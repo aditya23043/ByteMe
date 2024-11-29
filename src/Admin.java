@@ -6,6 +6,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.JFrame;
+
 public class Admin {
 
     Scanner scanner = new Scanner(System.in);
@@ -64,7 +66,7 @@ public class Admin {
             for (Food food_item : Menu.get_list()) {
                 Header.imp(food_item.get_title() + " [ID: " + food_item.get_index() + "]");
                 Header.content("Price: ₹" + food_item.get_price() + "\nType: " + food_item.get_category()
-                        + "\nAvailable: " + food_item.get_availability());
+                        + "\nAvailable: " + food_item.get_availability() + "\nStock: " + food_item.get_stock());
                 if (!Menu.get_list().getLast().equals(food_item)) {
                     Header.content("\n");
                 }
@@ -101,6 +103,7 @@ public class Admin {
                         scanner.nextLine();
                         if (price <= 0) {
                             Util.throw_error("Food price cannot be less than or equal to zero");
+                            break;
                         }
 
                         System.out.print("\tIs the food available? (y/n): ");
@@ -147,7 +150,15 @@ public class Admin {
                             b_available = false;
                         }
 
-                        Menu.add(name, price, category, b_available);
+                        System.out.print("\tEnter the new food item's stock: ");
+                        int stock = scanner.nextInt();
+                        scanner.nextLine();
+                        if (stock < 0) {
+                            Util.throw_error("Food stock cannot be less than zero");
+                            break;
+                        }
+
+                        Menu.add(name, price, category, b_available, stock);
 
                         System.out.println("\n\t\033[32mItem added successfully!\033[0m");
                         TimeUnit.SECONDS.sleep(1);
@@ -184,6 +195,7 @@ public class Admin {
                                 scanner.nextLine();
                                 if (new_price <= 0) {
                                     Util.throw_error("Food price cannot be less than or equal to zero");
+                                    break;
                                 }
                                 food_item_to_be_updated.set_price(new_price);
 
@@ -232,7 +244,16 @@ public class Admin {
                                 }
                                 food_item_to_be_updated.set_availability(b_new_item_available);
 
-                                System.out.println("\n\t\033[32mItem removed successfully!\033[0m");
+                                System.out.print("\tEnter the updated food item stock: ");
+                                int new_stock = scanner.nextInt();
+                                scanner.nextLine();
+                                if (new_stock < 0) {
+                                    Util.throw_error("Food stock cannot be less than zero");
+                                    break;
+                                }
+                                food_item_to_be_updated.set_stock(new_stock);
+
+                                System.out.println("\n\t\033[32mItem updated successfully!\033[0m");
                                 TimeUnit.SECONDS.sleep(1);
 
                                 break;
@@ -286,7 +307,9 @@ public class Admin {
                 // NOTE: Return to the previous menu when any char entered
                 return;
             } finally {
-                MainFrame.render();
+                if (JFrame.getFrames().length != 0) {
+                    MainFrame.render();
+                }
             }
 
         }
@@ -303,6 +326,7 @@ public class Admin {
                 Header.content("Order ID: " + order.get_id());
                 Header.content("Order Qty: " + order.get_qty());
                 Header.content("Order Amount: ₹" + order.get_amt() + "\n");
+                Header.content("Delivery Address: " + order.get_address() + "\n");
                 Header.content("Status: " + order.get_status() + "\n");
                 for (FoodPair food_pair : order.get_food_list()) {
                     Header.content("\t ID:" + food_pair.food.get_index() + " " + food_pair.food.get_title()
@@ -395,6 +419,9 @@ public class Admin {
                         } else if (Order.get_list().getLast().equals(order)) {
                             Util.throw_error("Order not found!");
                         }
+                    }
+                    if (JFrame.getFrames().length != 0) {
+                        MainFrame.render();
                     }
 
                     break;

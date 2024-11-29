@@ -7,6 +7,8 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import javax.swing.JFrame;
+
 public class Customer {
 
     // util fields
@@ -14,8 +16,16 @@ public class Customer {
     int id;
 
     // actual fields
+    private String username;
+    private String password;
+
     private CustomerType cType = CustomerType.REGULAR;
     private ArrayList<FoodPair> shopping_cart = new ArrayList<>();
+
+    Customer(String _username, String _password) {
+        this.username = _username;
+        this.password = _password;
+    }
 
     private void add_item(int id, int qty) throws CustomException {
         Boolean contains = false;
@@ -28,6 +38,11 @@ public class Customer {
                 for(FoodPair food_pair : shopping_cart){
                     if (food_pair.food.equals(food)) {
                         contains = true;
+                        if (qty > food.get_stock()) {
+                            Util.throw_error("Not Enough Stock!");
+                            break;
+                        }
+                        food.set_stock(food.get_stock() - qty);
                         food_pair.quantity += qty;
                         System.out.print("\n\t\033[32mSuccessfully added item to cart!\033[0m");
                         try {
@@ -39,6 +54,11 @@ public class Customer {
                     }
                 }
                 if (!contains) {
+                    if (qty > food.get_stock()) {
+                        Util.throw_error("Not Enough Stock!");
+                        break;
+                    }
+                    food.set_stock(food.get_stock() - qty);
                     shopping_cart.add(new FoodPair(food, qty));
                     System.out.print("\n\t\033[32mSuccessfully added item to cart!\033[0m");
                     try {
@@ -102,7 +122,7 @@ public class Customer {
                         for (Food food_item : menu_list) {
                             Header.imp(food_item.get_title() + " [ID: " + food_item.get_index() + "]");
                             Header.content("Price: ₹" + food_item.get_price() + " │ Type: " + food_item.get_category()
-                                    + " │ Available: " + food_item.get_availability());
+                                    + " │ Available: " + food_item.get_availability() + " │ Stock: " + food_item.get_stock());
                             if (!menu_list.getLast().equals(food_item)) {
                                 Header.content("\n");
                             }
@@ -199,7 +219,7 @@ public class Customer {
                             scanner.nextLine();
                             final FoodType category = _category;
                             // NOTE: this is the cool stuff yooo
-                            // i hate java but this stream and comparator stuff in java i really like
+                            //() i hate java but this stream and comparator stuff in java i really like
                             // this is somewhat like map in haskell where you can parse through and filter out stuff in just one line which is actually way more verbose than i thought it would be
                             // btw if you are reading this, you should try out haskell, it really makes understanding of basic "functions" (look what i did there) intuitive
                             menu_list = menu_list.stream().filter(x -> x.get_category() == category).collect(Collectors.toCollection(ArrayList::new));
@@ -232,6 +252,10 @@ public class Customer {
                             scanner.nextLine();
                             System.out.print("\n\tEnter the Quantity: ");
                             int qty = scanner.nextInt();
+                            if (qty <= 0) {
+                                Util.throw_error("Quantity cannot be equal to or less than zero!");
+                                break;
+                            }
                             scanner.nextLine();
                             add_item(id,qty);
 
@@ -347,6 +371,11 @@ public class Customer {
                                 }
 
                                 System.out.print("\n\t\033[32mSuccessfully placed the order!\033[0m");
+
+                                if (JFrame.getFrames().length != 0) {
+                                    MainFrame.render();
+                                }
+
                                 try {
                                     TimeUnit.MILLISECONDS.sleep(500);
                                 } catch (InterruptedException e) {
@@ -363,8 +392,8 @@ public class Customer {
                                 e.printStackTrace();
                             }
                     }
-
                 }
+
                 break;
             // orders
             case 2:
