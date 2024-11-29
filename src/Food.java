@@ -1,4 +1,6 @@
-class Food {
+import java.io.Serializable;
+
+class Food implements Serializable{
 
     private int index;
     private String title;

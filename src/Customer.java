@@ -1,4 +1,10 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +21,14 @@ public class Customer {
     Scanner scanner = new Scanner(System.in);
     int id;
 
+    // cart storage stuff
+    String cart_db_filename_prefix = "/home/adi/repo/ByteMe/src/database/tmp/";
+
+    FileInputStream file_in;
+    FileOutputStream file_out;
+
+    File cart_temp;
+
     // actual fields
     private String username;
     private String password;
@@ -25,6 +39,17 @@ public class Customer {
     Customer(String _username, String _password) {
         this.username = _username;
         this.password = _password;
+
+        //cart storage temp file
+        try{
+            cart_temp = File.createTempFile("user_"+username+"_", ".tmp", new File(cart_db_filename_prefix));
+            file_in = new FileInputStream(cart_temp);
+            file_out = new FileOutputStream(cart_temp);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 
     private void add_item(int id, int qty) throws CustomException {
@@ -131,6 +156,17 @@ public class Customer {
                     Header.bottom();
 
                     Header.top("Shopping Cart");
+
+                    // retrieve the cart data from temp file if not null
+                    // try {
+                    //     if (cart_temp.exists() && cart_temp.length() > 0) {
+                    //         ObjectInputStream in = new ObjectInputStream(file_in);
+                    //         shopping_cart = (ArrayList<FoodPair>) in.readObject();
+                    //     }
+                    // } catch (ClassNotFoundException | IOException e) {
+                    //     e.printStackTrace();
+                    // }
+
                     if (shopping_cart.isEmpty()) {
                         Header.content_center("- NONE -");
                     } else {
@@ -259,6 +295,18 @@ public class Customer {
                             scanner.nextLine();
                             add_item(id,qty);
 
+                            // update the menu after adding stuff to cart cuz stock update hoga na
+                            if (JFrame.getFrames().length != 0) {
+                                MainFrame.render();
+                            }
+
+                            try {
+                                ObjectOutputStream out = new ObjectOutputStream(file_out);
+                                out.writeObject(shopping_cart);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
                             break;
                         case 6:
                             if (shopping_cart.isEmpty()) {
@@ -275,6 +323,13 @@ public class Customer {
                             scanner.nextLine();
                             for (FoodPair food_pair : shopping_cart) {
                                 if (food_pair.food.get_index() == id) {
+                                    // update the stock as well
+                                    for (Food _food : Menu.get_list()) {
+                                        if (_food.get_index() == id) {
+                                            _food.set_stock(food_pair.food.get_stock()+food_pair.quantity);
+                                            break;
+                                        }
+                                    }
                                     shopping_cart.remove(food_pair);
                                     System.out.print("\n\t\033[32mSuccessfully removed item from cart!\033[0m");
                                     try {
@@ -293,6 +348,14 @@ public class Customer {
                                     }
                                 }
                             }
+
+                            try {
+                                ObjectOutputStream out = new ObjectOutputStream(file_out);
+                                out.writeObject(shopping_cart);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
                             break;
                         case 7:
                             if (shopping_cart.isEmpty()) {
@@ -322,6 +385,12 @@ public class Customer {
                             }
                             for (FoodPair food_pair : shopping_cart) {
                                 if (food_pair.food.get_index() == id) {
+                                    if (new_qty > food_pair.food.get_stock()+food_pair.quantity) {
+                                        Util.throw_error("Not Enough Stock!");
+                                        break;
+                                    }
+                                    // update the stock as well
+                                    food_pair.food.set_stock(food_pair.food.get_stock()+food_pair.quantity-new_qty);
                                     food_pair.quantity = new_qty;
                                     System.out.print("\n\t\033[32mSuccessfully updated item's quantity!\033[0m");
                                     try {
@@ -340,6 +409,14 @@ public class Customer {
                                     }
                                 }
                             }
+
+                            try {
+                                ObjectOutputStream out = new ObjectOutputStream(file_out);
+                                out.writeObject(shopping_cart);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
                             break;
                         case 8:
                             if (this.shopping_cart.isEmpty()) {

@@ -1,4 +1,6 @@
-class FoodPair {
+import java.io.Serializable;
+
+class FoodPair implements Serializable{
     protected Food food;
     protected int quantity;
 

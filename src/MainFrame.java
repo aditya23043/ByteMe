@@ -60,7 +60,7 @@ class MenuPanel extends JPanel implements ActionListener {
         top_label.setHorizontalAlignment(JLabel.CENTER);
         top_label.setBorder(new EmptyBorder(20, 10, 20, 10));
 
-        String[] table_header = { "Index", "Item Name", "Price", "Category", "Available" };
+        String[] table_header = { "Index", "Item Name", "Price", "Category", "Available", "Stock" };
         DefaultTableModel model = new DefaultTableModel(table_header, 0);
 
         for (Food _food : Menu.get_list()) {
@@ -70,7 +70,8 @@ class MenuPanel extends JPanel implements ActionListener {
                 _food.get_title(),
                 "₹"+_food.get_price(),
                 _food.get_category(),
-                _food.get_availability()
+                _food.get_availability(),
+                _food.get_stock()
             };
             model.addRow(row);
         }
@@ -82,10 +83,11 @@ class MenuPanel extends JPanel implements ActionListener {
         table.setDefaultEditor(Object.class, null);
         table.setDefaultRenderer(Object.class, new PaddedCellRenderer());
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(80);
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
         table.getColumnModel().getColumn(1).setPreferredWidth(320);
-        table.getColumnModel().getColumn(2).setPreferredWidth(80);
-        table.getColumnModel().getColumn(3).setPreferredWidth(160);
+        table.getColumnModel().getColumn(2).setPreferredWidth(50);
+        table.getColumnModel().getColumn(3).setPreferredWidth(80);
+        table.getColumnModel().getColumn(4).setPreferredWidth(50);
         table.getColumnModel().getColumn(4).setPreferredWidth(80);
 
         JScrollPane scroll_pane = new JScrollPane(table);
@@ -152,7 +154,7 @@ class PendingOrdersPanel extends JPanel implements ActionListener {
 
         JButton pending_orders_button = new JButton("Show Menu 󰁔");
         pending_orders_button.setFont(button_font);
-        pending_orders_button.setBorder(new EmptyBorder(20, 10, 20, 10));
+        pending_orders_button.setBorder(new EmptyBorder(10, 10, 10, 10));
         pending_orders_button.addActionListener(this);
 
         this.add(top_label, BorderLayout.PAGE_START);
