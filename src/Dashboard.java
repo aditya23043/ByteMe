@@ -76,6 +76,10 @@ public class Dashboard {
                     Util.throw_error("Passwords do not match! Try Again!");
                     break;
                 }
+                if (username_signup.isBlank() || password_signup.isBlank()) {
+                    Util.throw_error("Password / Username cannot be blank!");
+                    break;
+                }
                 System.out.print("\n\t\033[32mSigned In Successfully! Login To continue...\033[0m");
                 try {
                     TimeUnit.MILLISECONDS.sleep(500);

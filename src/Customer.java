@@ -52,20 +52,20 @@ public class Customer {
         }
     }
 
-    private void add_item(int id, int qty) throws CustomException {
+    protected boolean add_item(int id, int qty) throws CustomException {
         Boolean contains = false;
         for (Food food : Menu.get_list()) {
             if (food.get_index() == id) {
                 if (!food.get_availability()) {
                     Util.throw_error("Food Not Available as of this moment!");
-                    break;
+                    return false;
                 }
                 for(FoodPair food_pair : shopping_cart){
                     if (food_pair.food.equals(food)) {
                         contains = true;
                         if (qty > food.get_stock()) {
                             Util.throw_error("Not Enough Stock!");
-                            break;
+                            return false;
                         }
                         food.set_stock(food.get_stock() - qty);
                         food_pair.quantity += qty;
@@ -75,13 +75,13 @@ public class Customer {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        break;
+                        return true;
                     }
                 }
                 if (!contains) {
                     if (qty > food.get_stock()) {
                         Util.throw_error("Not Enough Stock!");
-                        break;
+                        return false;
                     }
                     food.set_stock(food.get_stock() - qty);
                     shopping_cart.add(new FoodPair(food, qty));
@@ -91,13 +91,15 @@ public class Customer {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    return true;
                 }
-                break;
             }
             else if (Menu.get_list().getLast().equals(food)) {
                 Util.throw_error("Item not found!");
+                return false;
             }
         }
+        return false;
     }
 
     public void dashboard() throws CustomException {
